@@ -49,7 +49,7 @@ public class CardBookController {
                     .name(name)
                     .image(image)
                     .build();
-            CardBookResponseDTO ResponseDTO = cardBookService.register(RequestDTO, 1);
+            CardBookResponseDTO ResponseDTO = cardBookService.register(RequestDTO, 4); // 로그인하지 않았을 경우에는 손님용 계정으로 등록
             return ApiUtils.success(ResponseDTO, "카드북이 생성되었습니다.");
         }
         CardBookCreateRequestDTO cardBookCreateRequestDTO = CardBookCreateRequestDTO.builder()
@@ -109,7 +109,7 @@ public class CardBookController {
         List<CardBookResponseDTO> myCardbook = new ArrayList<>();
 
         if(user!=null) myCardbook = cardBookService.getMyCardbook(user.getUserId());
-        else myCardbook = cardBookService.getMyCardbook(1);
+        else myCardbook = cardBookService.getMyCardbook(4); // 로그인하지 않았을 경우에는 손님용 계정으로 등록
         MainPageResponseDTO mainPageResponseDTO = MainPageResponseDTO.builder()
                 .originCardbooks(defaultCardbook)
                 .myCardbooks(myCardbook)
