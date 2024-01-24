@@ -42,7 +42,16 @@ public class CardBookController {
             @CurrentUser User user,
             @RequestParam("name") String name,
             @RequestParam("image") MultipartFile image) throws IOException {
-        log.info("카드북 생성 요청 (Nickname) : " + user.getNickname());
+        log.info("카드북 생성 요청");
+        // 비로그인시 userId=1로 고정
+        if (user == null) {
+            CardBookCreateRequestDTO RequestDTO = CardBookCreateRequestDTO.builder()
+                    .name(name)
+                    .image(image)
+                    .build();
+            CardBookResponseDTO ResponseDTO = cardBookService.register(RequestDTO, 1);
+            return ApiUtils.success(ResponseDTO, "카드북이 생성되었습니다.");
+        }
         CardBookCreateRequestDTO cardBookCreateRequestDTO = CardBookCreateRequestDTO.builder()
                 .name(name)
                 .image(image)
@@ -58,13 +67,13 @@ public class CardBookController {
             @RequestParam("name") String name,
             @RequestParam("cardbookId") Integer cardbookId,
             @RequestParam("image") MultipartFile image) throws IOException {
-        log.info("카드북 수정 요청 (Nickname) : " + user.getNickname());
+        log.info("카드북 수정 요청");
         CardBookUpdateRequestDTO cardBookUpdateRequestDTO = CardBookUpdateRequestDTO.builder()
                 .name(name)
                 .cardbookId(cardbookId)
                 .image(image)
                 .build();
-        if(!cardBookService.getCardbook(cardBookUpdateRequestDTO.getCardbookId()).getWriterId().equals(user.getUserId())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
+//        if(!cardBookService.getCardbook(cardBookUpdateRequestDTO.getCardbookId()).getWriterId().equals(user.getUserId())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
         CardBookResponseDTO cardBookResponseDTO = cardBookService.update(cardBookUpdateRequestDTO);
         return ApiUtils.success(cardBookResponseDTO,"카드북이 수정되었습니다.");
     }
