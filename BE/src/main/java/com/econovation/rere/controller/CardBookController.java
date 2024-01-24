@@ -42,14 +42,14 @@ public class CardBookController {
             @CurrentUser User user,
             @RequestParam("name") String name,
             @RequestParam("image") MultipartFile image) throws IOException {
-        log.info("카드북 생성 요청");
+        log.info("카드북 생성 요청 (cardbookName): "+name);
         // 비로그인시 userId=1로 고정
         if (user == null) {
             CardBookCreateRequestDTO RequestDTO = CardBookCreateRequestDTO.builder()
                     .name(name)
                     .image(image)
                     .build();
-            CardBookResponseDTO ResponseDTO = cardBookService.register(RequestDTO, 1);
+            CardBookResponseDTO ResponseDTO = cardBookService.register(RequestDTO, 2);
             return ApiUtils.success(ResponseDTO, "카드북이 생성되었습니다.");
         }
         CardBookCreateRequestDTO cardBookCreateRequestDTO = CardBookCreateRequestDTO.builder()
@@ -67,7 +67,7 @@ public class CardBookController {
             @RequestParam("name") String name,
             @RequestParam("cardbookId") Integer cardbookId,
             @RequestParam("image") MultipartFile image) throws IOException {
-        log.info("카드북 수정 요청");
+        log.info("카드북 수정 요청 (cardbookName): "+name);
         CardBookUpdateRequestDTO cardBookUpdateRequestDTO = CardBookUpdateRequestDTO.builder()
                 .name(name)
                 .cardbookId(cardbookId)
@@ -81,7 +81,7 @@ public class CardBookController {
 //    삭제
     @DeleteMapping("/cardbook/{cardbookId}")
     public ApiResult<Boolean> removeCardBook(@CurrentUser User user, @PathVariable("cardbookId") Integer cardbookId){
-//        log.info("카드북 삭제 요청 (Nickname) : " + user.getNickname());
+        log.info("카드북 삭제 요청 (cardbookId) : "+cardbookId);
 //        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
         Boolean result = cardBookService.remove(cardbookId);
 
