@@ -27,15 +27,15 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(cudloginInterceptor)
                 .order(1)
                 .addPathPatterns(
-                        "/cardbook/**",
+//                        "/cardbook/**",
                         "/users/update/**",
                         "/users/logout")
                 .excludePathPatterns();
 
-        registry.addInterceptor(readLoginInterceptor)
-                .order(2)
-                .addPathPatterns("/cardbook/{cardbookId}/themes/**")
-                .addPathPatterns("/cardbook/{cardbookId}/theme/**");
+//        registry.addInterceptor(readLoginInterceptor)
+//                .order(2)
+//                .addPathPatterns("/cardbook/{cardbookId}/themes/**")
+//                .addPathPatterns("/cardbook/{cardbookId}/theme/**");
     }
 
 

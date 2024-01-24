@@ -36,8 +36,8 @@ public class ThemeController {
     @PostMapping("/cardbook/{cardbookId}/theme")
     public ApiResult<Boolean> createTheme(@CurrentUser User user, @RequestBody @Valid ThemeCreateRequestDTO themeCreateRequestDTO, @PathVariable("cardbookId") Integer cardbookId){
 
-        log.info("사용자 : "+user.getNickname()+", 목차 생성 : "+themeCreateRequestDTO.getName());
-        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
+//        log.info("사용자 : "+user.getNickname()+", 목차 생성 : "+themeCreateRequestDTO.getName());
+//        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
         return ApiUtils.success(themeService.register(themeCreateRequestDTO, cardbookId),"목차 생성에 성공하였습니다.");
     }
 
@@ -70,7 +70,7 @@ public class ThemeController {
     @PutMapping("/cardbook/{cardbookId}/theme/{themeId}")
     public ApiResult<Boolean> updateThemeAndCards(@CurrentUser User user, @RequestBody @Valid ThemeUpdateRequestDTO themeUpdateRequestDTO, @PathVariable("cardbookId") Integer cardbookId, @PathVariable("themeId") Integer themeId){
         log.info("사용자 : "+user.getNickname()+", 목차 수정 (themeID): "+themeId);
-        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
+//        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
         return ApiUtils.success(themeService.update(themeUpdateRequestDTO, themeId),"목차가 수정되었습니다.");
     }
 
@@ -78,7 +78,7 @@ public class ThemeController {
     @DeleteMapping("/cardbook/{cardbookId}/theme/{themeId}")
     public ApiResult<Boolean> deleteThemeAndCards(@CurrentUser User user, @PathVariable("cardbookId") Integer cardbookId, @PathVariable("themeId") Integer themeId){
         log.info("사용자 : "+user.getNickname()+", 목차 삭제 (themeID : "+themeId);
-        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
+//        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
         return ApiUtils.success(themeService.remove(themeId), "목차가 삭제되었습니다.");
     }
 }

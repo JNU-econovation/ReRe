@@ -72,8 +72,8 @@ public class CardBookController {
 //    삭제
     @DeleteMapping("/cardbook/{cardbookId}")
     public ApiResult<Boolean> removeCardBook(@CurrentUser User user, @PathVariable("cardbookId") Integer cardbookId){
-        log.info("카드북 삭제 요청 (Nickname) : " + user.getNickname());
-        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
+//        log.info("카드북 삭제 요청 (Nickname) : " + user.getNickname());
+//        if(!cardBookService.getCardbook(cardbookId).getWriter().equals(user.getNickname())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
         Boolean result = cardBookService.remove(cardbookId);
 
         return ApiUtils.success(result, "카드북 삭제가 완료되었습니다.");
