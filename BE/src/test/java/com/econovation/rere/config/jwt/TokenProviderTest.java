@@ -30,7 +30,7 @@ public class TokenProviderTest {
     void generateToken() {
         // given
         User testUser = userRepository.save(User.builder()
-                .loginId("testUser2")
+                .loginId("testUser")
                 .pw("1q2w3e4r!")
                 .build());
         // when
@@ -78,7 +78,7 @@ public class TokenProviderTest {
     @Test
     void getAuthentication() {
         // given
-        String loginId = "testUser1";
+        String loginId = "testUser";
         String token = JwtFactory.builder()
                 .subject(loginId)
                 .build()
