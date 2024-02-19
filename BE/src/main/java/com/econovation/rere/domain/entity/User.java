@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-@SQLDelete(sql = "update user_card_book set deleted = true where user_id = ?")
+@SQLDelete(sql = "update user set deleted = true where user_id = ?")
 @Where(clause = "deleted = false")
 public class User implements Serializable {
 
