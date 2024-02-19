@@ -101,4 +101,11 @@ public class UserService {
 
         user.updateNickname(nickname);
     }
+
+    // 전달받은 유저 ID로 유저를 검색해서 전달
+    @Transactional(readOnly = true)
+    public User findById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
+    }
 }
