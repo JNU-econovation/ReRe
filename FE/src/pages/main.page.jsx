@@ -40,6 +40,7 @@ const MainPage = () => {
             data={data?.data?.response.originCardbooks}
             barText="기본 카드북"
             onCardbookClick={handleCardbookClick}
+            user="관리자"
           ></Grid>
           <MainBar text="나의 카드북"></MainBar>
           <MyCardBookContainer>
@@ -48,6 +49,7 @@ const MainPage = () => {
               data={data?.data?.response.myCardbooks}
               barText="나의 카드북"
               onCardbookClick={handleCardbookClick}
+              user="사용자"
             ></Grid>
           </MyCardBookContainer>
         </MainContainer>

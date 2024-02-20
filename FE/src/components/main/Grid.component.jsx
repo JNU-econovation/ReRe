@@ -3,7 +3,7 @@ import CardBook from "../common/CardBook.component";
 import styled from "styled-components";
 import NewCard from "./NewCard.component";
 
-const Grid = ({ data, barText, cardbookId, onCardbookClick }) => {
+const Grid = ({ data, barText, cardbookId, onCardbookClick, user }) => {
   const handleCardbookClick = (cardbookId) => {
     onCardbookClick(cardbookId);
   };
@@ -18,6 +18,7 @@ const Grid = ({ data, barText, cardbookId, onCardbookClick }) => {
             cardbookId={data.cardbookId}
             data={data}
             onClick={() => handleCardbookClick(data.cardbookId)}
+            user={user}
           ></CardBook>
         );
       })}
