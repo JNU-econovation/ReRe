@@ -40,10 +40,9 @@ const CardBook = ({ data, cardbookId, imageUrl, user }) => {
       };
 
       axios
-        .put(`${import.meta.env.VITE_API_KEY}/cardbook/${cardbookId}`, data)
+        .put(`${import.meta.env.VITE_API_KEY}/cardbook/`, data)
         .then((response) => {
           console.log("수정 완료!");
-          window.location.reload(); // 페이지 새로고침
         })
         .catch((error) => {
           console.error("수정 실패:", error.response);
