@@ -25,7 +25,7 @@ public class CardBookUpdateRequestDTO {
     @NotNull(message = "please write cardbookId")
     private Integer cardbookId;
 
-    private MultipartFile image;
+//    private MultipartFile image;
 
     //    시간 정보는 프론트에서 전송 시점을 기준으로 하는 게 아니라
 //    백엔드가 요청을 받은 시점을 기준으로 해야하는 듯

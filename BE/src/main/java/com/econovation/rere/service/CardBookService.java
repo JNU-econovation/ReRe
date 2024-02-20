@@ -15,16 +15,25 @@ import com.econovation.rere.domain.repository.UserRepository;
 import com.econovation.rere.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.result.Output;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,12 +70,61 @@ public class CardBookService {
         return CardBookResponseDTO.toCardBookResponseDTO(cardBook);
     }
 
+//    카드북 생성할 떄 카드북 이미지 리사이징
     private byte[] processImageData(MultipartFile imageFile) throws IOException {
         if (imageFile != null && !imageFile.isEmpty()) {
-            return imageFile.getBytes();
+
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
+
+            resize(imageFile.getInputStream(), ios, 50,50);
+
+            byte[] imageInByte = baos.toByteArray();
+
+            return imageInByte;
+
         } else {
+
             return loadDefaultImageData();
+
         }
+    }
+
+    private void resize(InputStream input, ImageOutputStream target, int width, int height) throws IOException {
+
+        BufferedImage originalImage = ImageIO.read(input);
+
+        /**
+         * SCALE_AREA_AVERAGING
+         * SCALE_DEFAULT
+         * SCALE_FAST
+         * SCALE_REPLICATE
+         * SCALE_SMOOTH
+         */
+        Image newResizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+        // we want image in png format
+        ImageIO.write(convertToBufferedImage(newResizedImage),
+                "jpg", target);
+    }
+
+    private BufferedImage convertToBufferedImage(Image img) {
+
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bi = new BufferedImage(
+                img.getWidth(null), img.getHeight(null),
+                BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D graphics2D = bi.createGraphics();
+        graphics2D.drawImage(img, 0, 0, null);
+        graphics2D.dispose();
+
+        return bi;
     }
 
     private byte[] loadDefaultImageData() {
@@ -88,8 +146,8 @@ public class CardBookService {
 
         cardBook.setName(cardBookUpdateRequestDTO.getName());
         cardBook.setUpdateDate(LocalDateTime.now());
-        byte[] imageData = processImageData(cardBookUpdateRequestDTO.getImage());
-        cardBook.setImage(imageData);
+//        byte[] imageData = processImageData(cardBookUpdateRequestDTO.getImage());
+//        cardBook.setImage(imageData);
 
         return CardBookResponseDTO.toCardBookResponseDTO(cardBook);
     }
@@ -118,6 +176,7 @@ public class CardBookService {
 
 //    메인 페이지에 띄울 기본 카드북 가져오기 (스크랩 수 내림차순을 기준으로 정렬)
     public List<CardBookResponseDTO> getDefaultCardbook(){
+
         List<CardBook> cardBooks = cardBookRepository.findByWriter("관리자");
         cardBooks.sort((cb1, cb2)->( cb2.getScrapCnt()-cb1.getScrapCnt()));
 
