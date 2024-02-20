@@ -33,13 +33,23 @@ public class CardBookController {
     private final CardBookService cardBookService;
     private final UserCardBookService userCardBookService;
 
-//    생성
+
+    //    생성
     @PostMapping("/cardbook")
     public ApiResult<CardBookResponseDTO> createCardBook(
             @CurrentUser User user,
             @RequestParam("name") String name,
             @RequestParam("image") MultipartFile image) throws IOException {
-        log.info("카드북 생성 요청 (Nickname) : " + user.getNickname());
+        log.info("카드북 생성 요청 (cardbookName): "+name);
+        // 비로그인시 userId=1로 고정
+        if (user == null) {
+            CardBookCreateRequestDTO RequestDTO = CardBookCreateRequestDTO.builder()
+                    .name(name)
+                    .image(image)
+                    .build();
+            CardBookResponseDTO ResponseDTO = cardBookService.register(RequestDTO, 4); // 로그인하지 않았을 경우에는 손님용 계정으로 등록
+            return ApiUtils.success(ResponseDTO, "카드북이 생성되었습니다.");
+        }
         CardBookCreateRequestDTO cardBookCreateRequestDTO = CardBookCreateRequestDTO.builder()
                 .name(name)
                 .image(image)
@@ -78,7 +88,7 @@ public class CardBookController {
         return ApiUtils.success(cardBookResponseDTOS, "검색에 성공하였습니다.");
     }
 
-//    메인 페이지 카드북 조회
+    //    메인 페이지 카드북 조회
     @GetMapping("/cardbooks")
     public ApiResult<MainPageResponseDTO> mainpageCardBook(@CurrentUser User user){
         log.info("메인 페이지 조회 요청");
@@ -91,6 +101,7 @@ public class CardBookController {
         List<CardBookResponseDTO> myCardbook = new ArrayList<>();
 
         if(user!=null) myCardbook = cardBookService.getMyCardbook(user.getUserId());
+        else myCardbook = cardBookService.getMyCardbook(4); // 로그인하지 않았을 경우에는 손님용 계정으로 등록
         MainPageResponseDTO mainPageResponseDTO = MainPageResponseDTO.builder()
                 .originCardbooks(defaultCardbook)
                 .myCardbooks(myCardbook)
@@ -98,6 +109,7 @@ public class CardBookController {
 
         return ApiUtils.success(mainPageResponseDTO, "메인 페이지 카드북 목록입니다.");
     }
+
 
     // 카드북 이미지 조회
 //    @GetMapping("/cardbook/{cardbookId}/image")
