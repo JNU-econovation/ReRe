@@ -20,9 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,16 +61,10 @@ public class CardBookController {
     @PutMapping("/cardbook")
     public ApiResult<CardBookResponseDTO> updateCardBook(
             @CurrentUser User user,
-            @RequestParam("name") String name,
-            @RequestParam("cardbookId") Integer cardbookId,
-            @RequestParam("image") MultipartFile image) throws IOException {
-        log.info("카드북 수정 요청 (cardbookName): "+name);
-        CardBookUpdateRequestDTO cardBookUpdateRequestDTO = CardBookUpdateRequestDTO.builder()
-                .name(name)
-                .cardbookId(cardbookId)
-                .image(image)
-                .build();
-//        if(!cardBookService.getCardbook(cardBookUpdateRequestDTO.getCardbookId()).getWriterId().equals(user.getUserId())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
+            CardBookUpdateRequestDTO cardBookUpdateRequestDTO) throws IOException {
+        log.info("카드북 수정 요청 (Nickname) : " + user.getNickname());
+
+        if(!cardBookService.getCardbook(cardBookUpdateRequestDTO.getCardbookId()).getWriterId().equals(user.getUserId())) throw new NotAthenticationException("카드북 작성자가 아닙니다.");
         CardBookResponseDTO cardBookResponseDTO = cardBookService.update(cardBookUpdateRequestDTO);
         return ApiUtils.success(cardBookResponseDTO,"카드북이 수정되었습니다.");
     }
